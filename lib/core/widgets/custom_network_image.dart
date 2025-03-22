@@ -41,8 +41,8 @@ class CNetworkImage extends StatelessWidget {
         child: SizedBox(
           width: width,
           height: height,
-          child:CachedNetworkImage(
-            imageUrl: url != null ? (url!.startsWith('http') ? url! : '${ApiConstants.baseUrl}/${url!}') : '',
+          child: CachedNetworkImage(
+            imageUrl: url != null ? (url!.startsWith('http') ? url! : '${ApiConstants.imagesBaseUrl}/${url!}') : '',
             fit: BoxFit.cover,
             progressIndicatorBuilder: (context, _, loadingProgress) {
               return const Center(child: Padding(padding: EdgeInsets.all(5), child: AppLoading()));

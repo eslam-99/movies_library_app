@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../features/movies/domain/entities/movie.dart';
 import '../../features/movies/presentation/pages/movie_detail_page.dart';
 import '../../features/movies/presentation/pages/movie_list_page.dart';
 
@@ -12,8 +13,8 @@ class Routes {
         return MaterialPageRoute(builder: (_) => const MovieListPage());
 
       case movieDetails:
-        final int movieId = settings.arguments as int;
-        return MaterialPageRoute(builder: (_) => MovieDetailsPage(movieId: movieId));
+        final movie = settings.arguments as Movie;
+        return MaterialPageRoute(builder: (_) => MovieDetailsPage(movie: movie));
 
       default:
         return MaterialPageRoute(

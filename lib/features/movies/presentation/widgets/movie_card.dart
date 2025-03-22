@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movies_library_app/core/navigation/app_nav.dart';
 import 'package:movies_library_app/core/widgets/custom_network_image.dart';
 import '../../../../core/navigation/routes.dart';
 import '../../../../core/api/api_constants.dart';
@@ -17,11 +18,7 @@ class MovieCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () {
-          Navigator.pushNamed(
-            context,
-            Routes.movieDetails,
-            arguments: movie.id,
-          );
+          AppNav.toNamed(context, Routes.movieDetails, extra: movie);
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -33,10 +30,13 @@ class MovieCard extends StatelessWidget {
                   flex: 1,
                   child: AspectRatio(
                     aspectRatio: 1,
-                    child: CNetworkImage(
-                      url: '${ApiConstants.imagesBaseUrl}${movie.posterPath}',
-                      borderRadius: 7.0,
-                      borderWidth: 0,
+                    child: Hero(
+                      tag: movie.title,
+                      child: CNetworkImage(
+                        url: movie.posterPath,
+                        borderRadius: 7.0,
+                        borderWidth: 0,
+                      ),
                     ),
                   ),
                 ),
@@ -63,7 +63,7 @@ class MovieCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            "⭐ ${movie.voteAverage.toString()}",
+                            '⭐ ${movie.voteAverage.toString()}',
                             style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,

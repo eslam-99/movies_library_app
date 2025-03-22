@@ -12,6 +12,6 @@ class MovieDetailsLoaded extends MovieDetailsState {
 }
 
 class MovieDetailsError extends MovieDetailsState {
-  final String message;
-  MovieDetailsError(this.message);
+  final String errMsg;
+  MovieDetailsError(this.errMsg);
 }

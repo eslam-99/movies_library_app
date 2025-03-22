@@ -1,5 +1,6 @@
 import 'package:hive/hive.dart';
 import 'package:json_annotation/json_annotation.dart';
+import '../../../../core/api/api_constants.dart';
 import '../../domain/entities/movie.dart';
 
 part 'movie_model.g.dart';
@@ -61,7 +62,7 @@ class MovieModel extends Movie {
       overview: json['overview'] ?? '',
       releaseDate: json['release_date'] ?? '',
       voteAverage: (json['vote_average'] as num?)?.toDouble() ?? 0,
-      posterPath: json['poster_path'] ?? '',
+      posterPath: '${ApiConstants.imagesBaseUrl}${json['poster_path'] ?? ''}',
       pageNo: json['page'] ?? 0,
       timestamp: json['timestamp'] ?? 0,
       genres: (json['genres'] as List<dynamic>?)?.map((g) => g['name']?.toString() ?? '').toList() ?? [],
