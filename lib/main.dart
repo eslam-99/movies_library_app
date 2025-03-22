@@ -19,7 +19,6 @@ class MovieApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => sl<MovieCubit>()..fetchMovies(page: 1)),
-        // BlocProvider(create: (context) => sl<MovieDetailsCubit>()),
       ],
       child: MaterialApp(
         title: 'Movie App',

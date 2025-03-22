@@ -14,6 +14,7 @@ class MovieCubit extends Cubit<MovieState> {
 
   Future<void> fetchMovies({int? page}) async {
     emit(MovieLoading());
+    // await Future.delayed(const Duration(milliseconds: 50));
     try {
       page = page ?? currentPage;
       final moviesResponse = await getPopularMovies(page);
