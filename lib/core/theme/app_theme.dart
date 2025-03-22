@@ -20,13 +20,13 @@ class AppTheme {
   static ThemeData get darkTheme {
     return ThemeData(
       brightness: Brightness.dark,
-      primaryColor: AppColors.secondary,
+      primaryColor: AppColors.primary,
       scaffoldBackgroundColor: AppColors.darkBackground,
       textTheme: const TextTheme(
         bodyLarge: TextStyle(color: AppColors.textSecondary),
       ),
       appBarTheme: const AppBarTheme(
-        backgroundColor: AppColors.secondary,
+        backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
       ),
     );

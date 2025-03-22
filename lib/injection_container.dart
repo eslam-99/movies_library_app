@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
 import 'package:hive/hive.dart';
@@ -9,7 +10,6 @@ import 'core/network/network_info.dart';
 import 'features/movies/data/data_sources/local/movie_local_datasource.dart';
 import 'features/movies/data/models/movie_model.dart';
 import 'features/movies/data/repositories/movie_repository_impl.dart';
-import 'features/movies/domain/entities/movie.dart';
 import 'features/movies/domain/repositories/movie_repository.dart';
 import 'features/movies/domain/usecases/get_movie_details.dart';
 import 'features/movies/data/data_sources/remote/movie_remote_datasource.dart';
@@ -20,6 +20,10 @@ import 'features/movies/presentation/cubit/movie_details/movie_details_cubit.dar
 final sl = GetIt.instance;
 
 Future<void> initInjection() async {
+  // Register Navigator Key
+  sl.registerSingleton(GlobalKey<NavigatorState>());
+
+
   // Initialize Hive
   final appDocumentDir = await getApplicationDocumentsDirectory();
   // Hive.initFlutter();

@@ -2,22 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:movies_library_app/core/theme/app_colors.dart';
+import 'package:movies_library_app/core/utils/toast.dart';
 import 'package:movies_library_app/features/movies/presentation/widgets/movie_card.dart';
-import 'package:number_pagination/number_pagination.dart';
+import 'package:number_paginator/number_paginator.dart';
 import '../../../../core/widgets/loading.dart';
 import '../../../../gen/assets.gen.dart';
 import '../cubit/movie/movie_cubit.dart';
 import '../widgets/popular_movies_pagination_row.dart';
 
 class MovieListPage extends StatelessWidget {
+
   const MovieListPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     final key = GlobalKey();
+    final numberPaginationController = NumberPaginatorController();
     return Scaffold(
       appBar: AppBar(toolbarHeight: 0.0),
-      body: BlocBuilder<MovieCubit, MovieState>(
+      body: BlocConsumer<MovieCubit, MovieState>(
+        listener: (context, state) {
+          if (state is MovieLoaded && state.errMsg != null) {
+            AppToast.showToastyBox(context: context, msg: state.errMsg!, type: AppToastType.error);
+          }
+        },
         builder: (context, state) {
           return CustomScrollView(
             key: key,
@@ -45,26 +53,32 @@ class MovieListPage extends StatelessWidget {
                   ),
                 ),
               ),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0).copyWith(bottom: 0),
-                  child: const PopularMoviesPaginationRow(),
+              if (state is MovieLoaded && state.movies.isNotEmpty)
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0).copyWith(bottom: 0),
+                    child: const PopularMoviesPaginationRow(),
+                  ),
                 ),
-              ),
               if (state is MovieLoading)
-                const SliverToBoxAdapter(child: AppLoading()),
-              if (state is MovieLoaded)
-              SliverPadding(
-                padding: const EdgeInsets.all(12.0),
-                sliver: SliverList.separated(
-                  itemCount: state.movies.length,
-                  itemBuilder: (context, index) {
-                    final movie = state.movies[index];
-                    return MovieCard(movie: movie);
-                  },
-                  separatorBuilder: (context, index) => const SizedBox(height: 8),
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.65,
+                    child: const Center(child: AppLoading()),
+                  ),
                 ),
-              ),
+              if (state is MovieLoaded && state.movies.isNotEmpty)
+                SliverPadding(
+                  padding: const EdgeInsets.all(12.0),
+                  sliver: SliverList.separated(
+                    itemCount: state.movies.length,
+                    itemBuilder: (context, index) {
+                      final movie = state.movies[index];
+                      return MovieCard(movie: movie);
+                    },
+                    separatorBuilder: (context, index) => const SizedBox(height: 8),
+                  ),
+                ),
               if (state is MovieLoaded && state.movies.isEmpty)
                 SliverToBoxAdapter(
                   child: SizedBox(
@@ -83,12 +97,12 @@ class MovieListPage extends StatelessWidget {
                   ),
                 ),
               if (state is MovieLoaded && state.movies.isNotEmpty)
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0).copyWith(top: 0),
-                  child: const PopularMoviesPaginationRow(),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0).copyWith(top: 0),
+                    child: const PopularMoviesPaginationRow(),
+                  ),
                 ),
-              ),
             ],
           );
           // if (state is MovieLoading) {

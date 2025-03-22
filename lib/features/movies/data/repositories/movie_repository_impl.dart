@@ -1,11 +1,10 @@
-import 'package:movies_library_app/features/movies/data/models/movie_model.dart';
-
 import '../../../../core/network/network_info.dart';
 import '../../domain/entities/movie.dart';
 import '../../domain/entities/movie_response.dart';
 import '../../domain/repositories/movie_repository.dart';
 import '../data_sources/local/movie_local_datasource.dart';
 import '../data_sources/remote/movie_remote_datasource.dart';
+import '../models/movie_model.dart';
 
 class MovieRepositoryImpl implements MovieRepository {
   final MovieRemoteDataSource remoteDataSource;
@@ -17,19 +16,21 @@ class MovieRepositoryImpl implements MovieRepository {
   @override
   Future<MovieResponse> getPopularMovies(int page) async {
     final cachedMovies = await localDataSource.getMoviesByPage(page);
-    final isExpired = cachedMovies.isNotEmpty && DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(cachedMovies.firstOrNull?.timestamp ?? 0)).inMinutes > 30;
-
-    if (cachedMovies.isNotEmpty && !isExpired) {
+    final isExpired = cachedMovies.isNotEmpty && DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(cachedMovies.firstOrNull?.timestamp ?? 0)).inHours > 6;
+    if (isExpired) {
+      await localDataSource.removeMoviesByPage(page);
+    }
+    if (cachedMovies.isNotEmpty) {
       return MovieResponse(
         movies: cachedMovies,
         fromCache: true,
+        cacheExpired: isExpired,
       );
     }
 
     if (await networkInfo.isConnected) {
       try {
         final moviesResponse = await remoteDataSource.fetchPopularMovies(page);
-        await localDataSource.removeMoviesByPage(page);
         await localDataSource.cacheMovies(moviesResponse.movies as List<MovieModel>);
         return moviesResponse;
       } catch (e) {

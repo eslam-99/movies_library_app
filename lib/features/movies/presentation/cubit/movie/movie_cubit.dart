@@ -15,9 +15,19 @@ class MovieCubit extends Cubit<MovieState> {
   Future<void> fetchMovies({int? page}) async {
     emit(MovieLoading());
     try {
-      final moviesResponse = await getPopularMovies(page ?? currentPage);
+      page = page ?? currentPage;
+      final moviesResponse = await getPopularMovies(page);
       totalPages = moviesResponse.totalPages ?? totalPages;
-      emit(MovieLoaded(moviesResponse.movies));
+      emit(MovieLoaded(moviesResponse.movies, errMsg: moviesResponse.errorMessage));
+      if (moviesResponse.cacheExpired) {
+        await Future.delayed(const Duration(milliseconds: 1));
+        final moviesResponse = await getPopularMovies(page);
+        totalPages = moviesResponse.totalPages ?? totalPages;
+        if (page == currentPage) {
+          currentPage = page;
+          emit(MovieLoaded(moviesResponse.movies, errMsg: moviesResponse.errorMessage));
+        }
+      }
     } catch (e) {
       emit(MovieError('Failed to load movies'));
     }

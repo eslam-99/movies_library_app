@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'core/navigation/routes.dart';
 import 'core/theme/app_theme.dart';
 import 'features/movies/presentation/cubit/movie/movie_cubit.dart';
-import 'features/movies/presentation/cubit/movie_details/movie_details_cubit.dart';
 import 'injection_container.dart';
 
 void main() async {
@@ -25,6 +24,7 @@ class MovieApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Movie App',
         debugShowCheckedModeBanner: false,
+        navigatorKey: sl<GlobalKey<NavigatorState>>(),
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
         themeMode: ThemeMode.system,

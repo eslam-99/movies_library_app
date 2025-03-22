@@ -34,9 +34,10 @@ class MovieLocalDataSourceImpl implements MovieLocalDataSource {
 
   @override
   Future<void> removeMoviesByPage(int page) async {
-    final moviesToRemove = movieBox.values.where((m) => m.pageNo == page).toList();
-    for (var movie in moviesToRemove) {
-      await movieBox.delete(movie.id);
+    final moviesToRemove = movieBox.keys.where((k) => (movieBox.get(k))?.pageNo == page).toList();
+    // final moviesToRemove = movieBox.values.where((m) => m.pageNo == page).toList();
+    for (var movieKey in moviesToRemove) {
+      await movieBox.delete(movieKey);
     }
   }
 }

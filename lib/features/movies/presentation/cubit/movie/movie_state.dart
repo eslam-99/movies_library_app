@@ -8,7 +8,8 @@ class MovieLoading extends MovieState {}
 
 class MovieLoaded extends MovieState {
   final List<Movie> movies;
-  MovieLoaded(this.movies);
+  final String? errMsg;
+  MovieLoaded(this.movies, {this.errMsg});
 }
 
 class MovieError extends MovieState {

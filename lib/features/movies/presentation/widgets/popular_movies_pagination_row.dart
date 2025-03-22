@@ -1,31 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:number_pagination/number_pagination.dart';
-
-import '../../../../core/theme/app_colors.dart';
+import 'package:movies_library_app/core/theme/app_colors.dart';
+import 'package:number_paginator/number_paginator.dart';
 import '../cubit/movie/movie_cubit.dart';
 
-class PopularMoviesPaginationRow extends StatelessWidget {
-  const PopularMoviesPaginationRow({
-    super.key,
-  });
+class PopularMoviesPaginationRow extends StatefulWidget {
+  const PopularMoviesPaginationRow({super.key});
 
   @override
+  State<PopularMoviesPaginationRow> createState() => _PopularMoviesPaginationRowState();
+}
+
+class _PopularMoviesPaginationRowState extends State<PopularMoviesPaginationRow> {
+  @override
   Widget build(BuildContext context) {
-    return NumberPagination(
-      buttonElevation: 2,
-      buttonRadius: 5,
-      selectedButtonColor: AppColors.primary,
-      onPageChanged: (newPage) {
-        if (context.read<MovieCubit>().state is! MovieLoading) {
+    return NumberPaginator(
+      numberPages: context.read<MovieCubit>().totalPages,
+      initialPage: context.read<MovieCubit>().currentPage - 1,
+      config: NumberPaginatorUIConfig(
+        buttonSelectedBackgroundColor: AppColors.primary,
+        buttonUnselectedForegroundColor: Theme.of(context).textTheme.bodyMedium?.color,
+      ),
+      onPageChange: (int index) {
+        int newPage = index + 1;
+        if (context.read<MovieCubit>().state is! MovieLoading && newPage != context.read<MovieCubit>().currentPage) {
           context.read<MovieCubit>().currentPage = newPage;
           context.read<MovieCubit>().fetchMovies();
+          setState(() {});
         }
       },
-      totalPages: context.read<MovieCubit>().totalPages,
-      currentPage: context.read<MovieCubit>().currentPage,
-      visiblePagesCount: ((MediaQuery.of(context).size.width - 200) / 75).round(),
-      // visiblePagesCount: ((MediaQuery.of(context).size.width - 200) / 75).round(),
     );
   }
 }
