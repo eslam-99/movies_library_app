@@ -1,11 +1,9 @@
 import 'package:hive/hive.dart';
-import 'package:json_annotation/json_annotation.dart';
 import '../../../../core/api/api_constants.dart';
 import '../../domain/entities/movie.dart';
 
 part 'movie_model.g.dart';
 
-@JsonSerializable()
 @HiveType(typeId: 0)
 class MovieModel extends Movie {
   @HiveField(0)
@@ -69,5 +67,27 @@ class MovieModel extends Movie {
     );
   }
 
-  Map<String, dynamic> toJson() => _$MovieModelToJson(this);
+  MovieModel copyWith({
+    int? id,
+    String? title,
+    String? overview,
+    String? releaseDate,
+    double? voteAverage,
+    String? posterPath,
+    List<String>? genres,
+    int? pageNo,
+    int? timestamp,
+  }) {
+    return MovieModel(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      overview: overview ?? this.overview,
+      releaseDate: releaseDate ?? this.releaseDate,
+      voteAverage: voteAverage ?? this.voteAverage,
+      posterPath: posterPath ?? this.posterPath,
+      genres: genres ?? this.genres.toList(),
+      pageNo: pageNo ?? this.pageNo,
+      timestamp: timestamp ?? this.timestamp,
+    );
+  }
 }

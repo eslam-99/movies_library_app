@@ -1,3 +1,4 @@
+import '../../../../core/config/app_contants.dart';
 import '../../../../core/network/network_info.dart';
 import '../../domain/entities/movie.dart';
 import '../../domain/entities/movie_response.dart';
@@ -16,16 +17,17 @@ class MovieRepositoryImpl implements MovieRepository {
   @override
   Future<MovieResponse> getPopularMovies(int page) async {
     final cachedMovies = await localDataSource.getMoviesByPage(page);
-    final isExpired = cachedMovies.isNotEmpty && DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(cachedMovies.firstOrNull?.timestamp ?? 0)).inHours > 6;
+    final isExpired =
+        cachedMovies.isNotEmpty &&
+        DateTime.now()
+                .difference(DateTime.fromMillisecondsSinceEpoch(cachedMovies.firstOrNull?.timestamp ?? 0))
+                .inMilliseconds >
+            AppConstants.cachingTimeout;
     if (isExpired) {
       await localDataSource.removeMoviesByPage(page);
     }
     if (cachedMovies.isNotEmpty) {
-      return MovieResponse(
-        movies: cachedMovies,
-        fromCache: true,
-        cacheExpired: isExpired,
-      );
+      return MovieResponse(movies: cachedMovies, fromCache: true, cacheExpired: isExpired);
     }
 
     if (await networkInfo.isConnected) {
@@ -34,11 +36,7 @@ class MovieRepositoryImpl implements MovieRepository {
         await localDataSource.cacheMovies(moviesResponse.movies as List<MovieModel>);
         return moviesResponse;
       } catch (e) {
-        return MovieResponse(
-          movies: cachedMovies,
-          fromCache: true,
-          errorMessage: 'Error Getting Movies from Server',
-        );
+        return MovieResponse(movies: cachedMovies, fromCache: true, errorMessage: 'Error Getting Movies from Server');
       }
     } else {
       return MovieResponse(
@@ -51,6 +49,27 @@ class MovieRepositoryImpl implements MovieRepository {
 
   @override
   Future<Movie> getMovieDetails(int movieId) async {
-    return await remoteDataSource.fetchMovieDetails(movieId);
+    // return await remoteDataSource.fetchMovieDetails(movieId);
+
+    final cachedMovie = await localDataSource.getMovieById(movieId);
+
+    if (cachedMovie != null) {
+      if (cachedMovie.genres.isNotEmpty) {
+        return cachedMovie;
+      } else {
+      }
+    }
+
+    if (await networkInfo.isConnected) {
+      try {
+        final movie = await remoteDataSource.fetchMovieDetails(movieId);
+        await localDataSource.updateCachedMovieGenres(movie);
+        return movie;
+      } catch (e) {
+        throw 'Error Getting Movies from Server';
+      }
+    } else {
+      throw 'Make sure you have an active internet connection';
+    }
   }
 }
