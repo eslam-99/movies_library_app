@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:lottie/lottie.dart';
+import 'package:movies_library_app/core/theme/app_colors.dart';
 
 import '../../gen/assets.gen.dart';
 
@@ -40,7 +42,8 @@ class AppLoading extends StatelessWidget {
               minHeight: 50,
               minWidth: 50,
             ),
-            child: Lottie.asset(Assets.lottie.loading),
+            child: const SpinKitSpinningLines(color: AppColors.primary),
+            // child: Lottie.asset(Assets.lottie.loading),
           );
         }
     );

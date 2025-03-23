@@ -41,6 +41,18 @@ dev_dependencies:
   json_serializable: ^6.7.1
   build_runner: ^2.4.15
   flutter_gen_runner: ^5.10.0
+  flutter_native_splash: ^2.4.5
+
+flutter_native_splash:
+  # dart run flutter_native_splash:create
+  android: true
+  ios: true
+  web: false
+  color: "#FFFFFF"
+  color_dark: "#121212"
+  image: "assets/images/logo.jpg"
+#  ios_content_mode: scaleToFill  # Stretches the image on iOS
+#  android_gravity: fill  # Stretches the image on Android
 
 flutter:
   uses-material-design: true
