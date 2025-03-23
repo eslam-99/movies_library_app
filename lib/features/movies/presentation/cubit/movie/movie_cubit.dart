@@ -10,7 +10,7 @@ class MovieCubit extends Cubit<MovieState> {
   MovieCubit(this.getPopularMovies) : super(MovieInitial());
 
   int currentPage = 1;
-  int totalPages = 49288;
+  int totalPages = 500;
 
   Future<void> fetchMovies({int? page}) async {
     emit(MovieLoading());
@@ -18,12 +18,10 @@ class MovieCubit extends Cubit<MovieState> {
     try {
       page = page ?? currentPage;
       final moviesResponse = await getPopularMovies(page);
-      totalPages = moviesResponse.totalPages ?? totalPages;
       emit(MovieLoaded(moviesResponse.movies, errMsg: moviesResponse.errorMessage));
       if (moviesResponse.cacheExpired) {
         await Future.delayed(const Duration(milliseconds: 1));
         final moviesResponse = await getPopularMovies(page);
-        totalPages = moviesResponse.totalPages ?? totalPages;
         if (page == currentPage) {
           currentPage = page;
           emit(MovieLoaded(moviesResponse.movies, errMsg: moviesResponse.errorMessage));

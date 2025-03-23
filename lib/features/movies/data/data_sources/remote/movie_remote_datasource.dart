@@ -26,7 +26,6 @@ class MovieRemoteDataSourceImpl implements MovieRemoteDataSource {
               )
               .toList(),
       fromCache: false,
-      totalPages: response.data['total_pages'],
     );
   }
 

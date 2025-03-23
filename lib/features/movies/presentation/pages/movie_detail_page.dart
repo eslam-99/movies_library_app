@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movies_library_app/core/theme/app_colors.dart';
 import 'package:movies_library_app/core/utils/toast.dart';
 import '../../../../core/widgets/loading.dart';
 import '../../../../injection_container.dart';
@@ -51,11 +52,32 @@ class MovieDetailsPage extends StatelessWidget {
                         children: [
                           Text(movieData!.title, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
                           const SizedBox(height: 8),
-                          Text('Release Date: ${movieData!.releaseDate}'),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.calendar_month_rounded, size: 24),
+                              const SizedBox(width: 5.0),
+                              Text('Release Date: ${movieData!.releaseDate}'),
+                            ],
+                          ),
                           const SizedBox(height: 8),
-                          Text('Rating: ⭐ ${movieData!.voteAverage}'),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.eighteen_up_rating_rounded, size: 24),
+                              const SizedBox(width: 5.0),
+                              Text('Rating: ⭐ ${movieData!.voteAverage}'),
+                            ],
+                          ),
                           const SizedBox(height: 8),
-                          Text('Genres: ${movieData!.genres.join(', ')}'),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.category_rounded, size: 24),
+                              const SizedBox(width: 5.0),
+                              Text('Genres: ${movieData!.genres.join(', ')}'),
+                            ],
+                          ),
                           const SizedBox(height: 8),
                           Text(movieData!.overview),
                         ],
@@ -64,30 +86,6 @@ class MovieDetailsPage extends StatelessWidget {
                   ),
               ],
             );
-            // if (state is MovieDetailsLoading) {
-            //   return const Center(child: AppLoading());
-            // } else if (state is MovieDetailsLoaded) {
-            //   final movie = state.movie;
-            //   return Padding(
-            //     padding: const EdgeInsets.all(16.0),
-            //     child: Column(
-            //       crossAxisAlignment: CrossAxisAlignment.start,
-            //       children: [
-            //         Text(movie.title, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-            //         const SizedBox(height: 8),
-            //         Text("Release Date: ${movie.releaseDate}"),
-            //         const SizedBox(height: 8),
-            //         Text("Rating: ${movie.voteAverage}"),
-            //         const SizedBox(height: 8),
-            //         Text("Genres: ${movie.genres.join(', ')}"),
-            //         const SizedBox(height: 8),
-            //         Text(movie.overview),
-            //       ],
-            //     ),
-            //   );
-            // } else {
-            //   return const Center(child: Text('Failed to load details'));
-            // }
           },
         ),
       ),
